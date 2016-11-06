@@ -243,7 +243,7 @@ class Schema(object):
 
     def _generate_basic(self, val):
         if val in JS_TYPES.keys():
-            val_type = JS_TYPES[value]
+            val_type = JS_TYPES[val]
         else:
             val_type = JS_TYPES[type(val)]
         self._add_type(val_type)
