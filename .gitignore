@@ -1,12 +1,17 @@
-# See: github.com/github/gitignore/blob/master/Python.gitignore
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
+
 
 # Distribution / packaging
-build/
-dist/
-*.egg-info/
-*.egg
-*.eggs
+.env/
+
+# Unit test / coverage reports
+.coverage
+
+.vagrant
+.idea
+.cache
+.DS_Store
+genson.egg-info/

@@ -42,7 +42,7 @@ class TestStdin(unittest.TestCase):
         self.assertEqual(stderr, None)
         self.assertEqual(
             json.loads(stdout),
-            {"required": ["hi"], "type": "object", "properties": {
+            {"type": "object", "properties": {
                 "hi": {"type": ["integer", "string"]}}})
 
     def test_delim_auto_empty(self):
@@ -50,7 +50,7 @@ class TestStdin(unittest.TestCase):
         self.assertEqual(stderr, None)
         self.assertEqual(
             json.loads(stdout),
-            {"required": ["hi"], "type": "object", "properties": {
+            {"type": "object", "properties": {
                 "hi": {"type": ["integer", "string"]}}})
 
     def test_delim_auto_whitespace(self):
@@ -58,5 +58,5 @@ class TestStdin(unittest.TestCase):
         self.assertEqual(stderr, None)
         self.assertEqual(
             json.loads(stdout),
-            {"required": ["hi"], "type": "object", "properties": {
+            {"type": "object", "properties": {
                 "hi": {"type": ["integer", "string"]}}})

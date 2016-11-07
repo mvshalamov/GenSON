@@ -9,13 +9,23 @@ JS_TYPES = {
     str: 'string',
     type(u''): 'string',
     int: 'integer',
-    'SERIAL': 'number',
-    'TEXT': 'string',
-    'TIMESTAMP': 'string',
     float: 'number',
     bool: 'boolean',
     type(None): 'null',
 }
+
+PEEWEE_TYPES = {
+    'SERIAL': 'integer',
+    'TEXT': 'string',
+    'TIMESTAMP': 'string',
+    'BOOLEAN': 'boolean',
+    'JSONB': 'string',
+    'INTEGER': 'integer',
+    'REAL': 'number',
+    'NUMERIC': 'number',
+}
+
+JS_TYPES.update(PEEWEE_TYPES)
 
 
 class Schema(object):
@@ -23,6 +33,17 @@ class Schema(object):
     Basic schema generator class. Schema objects can be loaded up
     with existing schemas and objects before being serialized.
     """
+
+    @classmethod
+    def create_default_schema(cls):
+        sch = cls()
+        sch.add_schema(
+            {
+                "type": "object", "properties": {},
+                "additionalProperties": False,
+            }
+        )
+        return sch
 
     def __init__(self, merge_arrays=True):
         """
@@ -199,7 +220,7 @@ class Schema(object):
             self._required = set(required)
         else:
             # use intersection to limit to properties present in both
-            self._required &= set(required)
+            self._required |= set(required)
 
     def _add_properties(self, properties, func):
         # recursively modify subschemas
@@ -234,7 +255,7 @@ class Schema(object):
 
     def _generate_object(self, obj):
         self._add_type('object')
-        self._add_required(obj.keys())
+        # self._add_required(obj.keys())
         self._add_properties(obj, 'add_object')
 
     def _generate_array(self, array):

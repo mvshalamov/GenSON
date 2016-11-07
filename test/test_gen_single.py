@@ -147,7 +147,6 @@ class TestObject(base.SchemaTestCase):
             "Stilton": "Sorry.",
             "Gruyere": False})
         self.assertResult({
-            "required": ["Gruyere", "Red Windsor", "Stilton"],
             "type": "object",
             "properties": {
                 "Red Windsor": {"type": "string"},
@@ -162,7 +161,6 @@ class TestComplex(base.SchemaTestCase):
     def test_array_in_object(self):
         self.add_object({"a": "b", "c": [1, 2, 3]})
         self.assertResult({
-            "required": ["a", "c"],
             "type": "object",
             "properties": {
                 "a": {"type": "string"},
@@ -185,7 +183,6 @@ class TestComplex(base.SchemaTestCase):
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["name", "quest"],
                 "properties": {
                     "quest": {"type": "string"},
                     "name": {"type": "string"},
@@ -199,15 +196,12 @@ class TestComplex(base.SchemaTestCase):
         self.add_object({"matryoshka": {"design": {"principle": "FTW!"}}})
         self.assertResult({
             "type": "object",
-            "required": ["matryoshka"],
             "properties": {
                 "matryoshka": {
                     "type": "object",
-                    "required": ["design"],
                     "properties": {
                         "design": {
                             "type": "object",
-                            "required": ["principle"],
                             "properties": {
                                 "principle": {"type": "string"}
                             }
