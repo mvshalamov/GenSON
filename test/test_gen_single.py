@@ -210,3 +210,24 @@ class TestComplex(base.SchemaTestCase):
                 }
             }
         })
+    
+    def test_numeric(self):
+        self.add_object({"type": "object", "properties": {}})
+        self.add_object({"name": "integer"})
+        self.add_object({"name": "integer"})
+        self.assertResult({
+            "type": "object",
+            "properties": {
+                "matryoshka": {
+                    "type": "object",
+                    "properties": {
+                        "design": {
+                            "type": "object",
+                            "properties": {
+                                "principle": {"type": "string"}
+                            }
+                        }
+                    }
+                }
+            }
+        })

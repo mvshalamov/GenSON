@@ -1,4 +1,6 @@
 import json
+import copy
+
 from collections import defaultdict
 from warnings import warn
 
@@ -20,9 +22,15 @@ PEEWEE_TYPES = {
     'TIMESTAMP': 'string',
     'BOOLEAN': 'boolean',
     'JSONB': 'string',
-    'INTEGER': 'integer',
-    'REAL': 'number',
-    'NUMERIC': 'number',
+    'INTEGER': {"type": "string", "pattern": "^[+-]?[0-9]+$"},
+    'REAL': [
+        {"type": "number"},
+        {"type": "string", "pattern": "^[+-]?([0-9]*[.])?[0-9]+$"}
+    ],
+    'NUMERIC': [
+        {"type": "number"},
+        {"type": "string", "pattern": "^[+-]?([0-9]*[.])?[0-9]+$"}
+    ],
 }
 
 JS_TYPES.update(PEEWEE_TYPES)
@@ -59,7 +67,7 @@ class Schema(object):
             'merge_arrays': merge_arrays
         }
 
-        self._type = set()
+        self._type = []# set()
         self._required = None
         self._properties = defaultdict(lambda: Schema(**self._options))
         self._items = None
@@ -130,11 +138,26 @@ class Schema(object):
 
         # unpack the type field
         if self._type:
-            schema['type'] = self._get_type()
+            if isinstance(self._get_type(), dict):
+                schema = self._get_type()
+            else:
+                schema['type'] = self._get_type()
 
         # call recursively on subschemas if object or array
         if 'object' in self._type:
-            schema['properties'] = self._get_properties(recurse)
+            # schema['properties'] = self._get_properties(recurse)
+            properties = copy.deepcopy(self._get_properties(recurse))
+            
+            for key_prop, val_prop in self._get_properties(recurse).items():
+                if isinstance(val_prop.get('type'), list):
+                    res = {"anyOf": []}
+                    for it in val_prop['type']:
+                        if isinstance(it, dict):
+                            res["anyOf"].append(it)
+                        else:
+                            res["anyOf"].append({'type':it})
+                    properties[key_prop] = res
+            schema['properties'] = properties
             if self._required:
                 schema['required'] = self._get_required()
 
@@ -171,7 +194,7 @@ class Schema(object):
     # getters
 
     def _get_type(self):
-        schema_type = self._type | set()  # get a copy
+        schema_type = self._type[:]  # get a copy
 
         # remove any redundant integer type
         if 'integer' in schema_type and 'number' in schema_type:
@@ -180,8 +203,6 @@ class Schema(object):
         # unwrap if only one item, else convert to array
         if len(schema_type) == 1:
             (schema_type,) = schema_type
-        else:
-            schema_type = sorted(schema_type)
 
         return schema_type
 
@@ -209,10 +230,15 @@ class Schema(object):
     # setters
 
     def _add_type(self, val_type):
-        if isinstance(val_type, (str, type(u''))):
-            self._type.add(val_type)
+        if isinstance(val_type, (str, dict)):
+            if val_type not in self._type:
+                self._type.append(val_type)
+        elif isinstance(val_type, list):
+            for el in val_type:
+                if el not in self._type:
+                    self._type.append(el)
         else:
-            self._type |= set(val_type)
+            self._type = list(set(self._type) | set(val_type))
 
     def _add_required(self, required):
         if self._required is None:
