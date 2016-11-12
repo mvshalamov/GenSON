@@ -17,7 +17,7 @@ JS_TYPES = {
 }
 
 PEEWEE_TYPES = {
-    'SERIAL': 'integer',
+    'SERIAL': {"type": "string", "pattern": "^[+-]?[0-9]+$"},
     'TEXT': 'string',
     'TIMESTAMP': 'string',
     'BOOLEAN': 'boolean',
@@ -27,7 +27,7 @@ PEEWEE_TYPES = {
         {"type": "number"},
         {"type": "string", "pattern": "^[+-]?([0-9]*[.])?[0-9]+$"}
     ],
-    'NUMERIC': [
+    'DECIMAL': [
         {"type": "number"},
         {"type": "string", "pattern": "^[+-]?([0-9]*[.])?[0-9]+$"}
     ],
