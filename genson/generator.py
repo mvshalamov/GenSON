@@ -17,17 +17,23 @@ JS_TYPES = {
 }
 
 PEEWEE_TYPES = {
-    'SERIAL': {"type": "string", "pattern": "^[+-]?[0-9]+$"},
+    'SERIAL': [
+        {"type": "integer"},
+        {"type": "string", "pattern": "^[+-]?[0-9]+$"},
+    ],
     'TEXT': 'string',
     'TIMESTAMP': 'string',
     'BOOLEAN': 'boolean',
     'JSONB': 'string',
-    'INTEGER': {"type": "string", "pattern": "^[+-]?[0-9]+$"},
+    'INTEGER': [
+        {"type": "integer"},
+        {"type": "string", "pattern": "^[+-]?[0-9]+$"}
+    ],
     'REAL': [
         {"type": "number"},
         {"type": "string", "pattern": "^[+-]?([0-9]*[.])?[0-9]+$"}
     ],
-    'DECIMAL': [
+    'NUMERIC': [
         {"type": "number"},
         {"type": "string", "pattern": "^[+-]?([0-9]*[.])?[0-9]+$"}
     ],
