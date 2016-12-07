@@ -1,3 +1,3 @@
 from .generator import Schema
 __all__ = ['Schema']
-__version__ = "v0.4.3"
+__version__ = "v0.4.5"

@@ -25,6 +25,7 @@ PEEWEE_TYPES = {
     'TIMESTAMP': 'string',
     'BOOLEAN': 'boolean',
     'JSONB': 'object',
+    'JSON': 'object',
     'INTEGER': [
         {"type": "integer"},
         {"type": "string", "pattern": "^[+-]?[0-9]+$"}
